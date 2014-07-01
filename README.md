@@ -23,13 +23,11 @@ usage:
         data: 'a'
     });
     var area1 = chart.add('AREA',{
-        width: 1,
         color: '#f0f',
         label: 'Marc',
         data: 'b'
     });
     var area2 = chart.stack('AREA',{
-        width: 1,
         color: '#ff0',
         label: 'Carl',
         data: 'c'
