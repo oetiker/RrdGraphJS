@@ -12,9 +12,10 @@ usage:
 
 ```html
 <div id="rrdgraph">
-<script type="text/javascript" charset="utf-8" src="rrdgrah.js></script>
+<script type="text/javascript" charset="utf-8" src="svg.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="rrdgrah.js"></script>
 <script type="text/javascript" charset="utf-8">
-    RRDgraph({
+    var chart = RRDgraph({
         id: 'rrdgraph',
         data: ['/rrdXport?src=a','/rrdXport?src=b']
     });
