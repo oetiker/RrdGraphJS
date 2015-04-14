@@ -35,7 +35,6 @@ Also the implementation does not yet cover all the drawing instructions availabl
 
 *`rrdGraphSvg.js` is taken from my extopus project ... it does not yet work in a generic way. It is just included as a place-holder at this point in time.*
 
-
 Example
 -------
 
@@ -47,6 +46,9 @@ For now this is all the documentation there is ...
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link href="rrdGraphCtrl.css" rel="stylesheet">
+    <!-- the modules are implmented on top of the qxWeb library from www.qooxdoo.org. It provides excellent
+         modularization and event normalization support out of the box and thus made implementation of these
+         modules much simpler -->
     <script type="text/javascript" src="q-4.1.min.js"></script>
     <script type="text/javascript" src="rrdGraphPng.js"></script>
     <script type="text/javascript" src="rrdGraphCtrl.js"></script>
