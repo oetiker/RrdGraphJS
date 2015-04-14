@@ -156,8 +156,6 @@ Also the implementation does not yet cover all the drawing instructions availabl
 Example
 -------
 
-For now this is all the documentation there is ...
-
 ```HTML
 <!DOCTYPE html>
 <html>
