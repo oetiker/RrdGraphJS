@@ -158,13 +158,13 @@ Remove ourselfs from the img.
 
 rrdGraphSvg.js
 --------------
-rrdGraphSvg.js implements RRD graphs on the browser side. It, in svg, relying on the wonderful
+rrdGraphSvg.js implements RRD graphs on the browser side. It leverages the wonderful
 d3.js library for lowlevel data manipulation.  It requires the output of
 xport to get to the actual data. Since very few monitoring systems readily provide xport data access, this variant is more difficult to implement in an existing system.
 
 Also the implementation does not yet cover all the drawing instructions available in rrd_graph. Especially for `VDEF` and `GPRINT` statements there is not even a plan yet on how to implement them.
 
-*`rrdGraphSvg.js` is taken from my extopus project ... it does not yet work in a generic way. It is just included as a place-holder at this point in time.*
+*NOTE `rrdGraphSvg.js` is taken from my extopus project ... it does not yet work in a generic way. It is just included as a place-holder at this point in time.*
 
 Example
 -------
