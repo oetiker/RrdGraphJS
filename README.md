@@ -1,5 +1,6 @@
 RrdGraphJS
 ==========
+by Tobi Oetiker, [OETIKER+PARTNER AG](http://www.oetiker.ch)
 
 The purpose of RrdGraphJS is to allow live interaction with RRD graphs.
 There are two approaches to accomplish this.  The simple one, where we just
