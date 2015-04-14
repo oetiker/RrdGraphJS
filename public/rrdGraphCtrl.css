@@ -1,0 +1,97 @@
+.qx-calendar table {
+    border-width: 0.0625rem;
+    border-color: #bbb;
+    border-collapse: collapse;
+    text-align: center;
+    border-spacing: 0
+}
+
+.qx-calendar button {
+    cursor: pointer
+}
+
+.qx-calendar button:focus {
+    -webkit-text-stroke: 0.0625rem #619edf;
+    color: #619edf
+}
+
+.qx-calendar thead {
+    border-width: 0.0625rem;
+    border-style: solid;
+    border-color: #bbb;
+    font-weight: bold
+}
+
+.qx-calendar-othermonth button {
+    color: #a0a0a0
+}
+
+.qx-calendar-today {
+    background-color: #ededed
+}
+
+.qx-calendar thead td {
+    padding: 0.125rem 0.375rem;
+    width: 14.3%
+}
+
+.qx-calendar td {
+    border-width: 0.0625rem;
+    border-style: solid;
+    border-color: #bbb;
+    background-color: #fff
+}
+
+.qx-calendar td button {
+    margin: 0;
+    width: 100%;
+    line-height: 2;
+    border: none;
+    background: none;
+    outline: none
+}
+
+.qx-calendar td button:disabled {
+    pointer-events: none
+}
+
+.qx-calendar thead tr:first-child td:first-child {
+    border-right-color: transparent;
+    border-right: 0
+}
+
+.qx-calendar .qx-calendar-month {
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-left: 0;
+    border-right: 0;
+    text-align: center
+}
+
+.qx-calendar thead tr:first-child td:last-child {
+    border-left-color: transparent;
+    border-left: 0;
+    text-align: right
+}
+
+td.qx-calendar-selected {
+    background-color: #619edf
+}
+
+td.qx-calendar-selected button {
+    color: #fff
+}
+
+td.qx-calendar-selected button:focus {
+    -webkit-text-stroke: 0;
+    color: #fff
+}
+
+.qx-calendar table[disabled] {
+    color: #a0a0a0
+}
+
+.qx-calendar[disabled] .selected {
+    background-color: #a0a0a0
+}
+
