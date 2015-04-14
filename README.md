@@ -18,7 +18,83 @@ Depending on the number of people playing with your charts, the load on the
 server can be significant as it will have to draw several graphs a second as
 the user interacts with the graphs.
 
+### Instantiation
 
+```JavaScript
+var g = q(selector).rrdGraphPng(configMap);
+```
+
+The selector is expected to pick up `<img>` tags with a `data-src-template` attribute. The template can contain the following mustache tags:
+
+```HTML
+<img class="rrd"  data-src-template="graphA?start={{start}}&amp;end={{end}}" />
+```
+
+#### `{{start}}`, `{{end}}`
+
+the start and end time of the chart in epoch seconds.
+
+#### `{{width}}`, `{{height}}`
+
+The size of you image tag as input for the back end chart renderer (make sure to provide img sizing instructions via css).
+
+#### `{{random}}`
+
+A random number for every chart requested. Use this to make sure to get a current image if you run into trouble with an eager cache.
+
+#### `{{zoom}}`
+
+If you set the `moveZoom` property. It will show up here while the chart is being moved. Causing a lower resolution (faster) chart
+to be rendered during animation operations.
+
+### Configuration Properties
+
+#### `canvasPadding`
+
+For zooming the pointer position on the graph canvas is relevant. Since the JS can not see where the actual chart
+is on the png image, this option allows you to provide a hint. Default: `100`
+
+#### `initialStart`
+
+Epoch time for the start of the chart as it is initially loaded. Default: `(new Date()).getTime() / 1000 - 24*3600`
+
+#### `initialRange`
+
+Initial time range for the chart in seconds. Default: `24*3600`
+
+#### `moveZoom`
+
+The `moveZoom` value  will show up in `{{zoom}}` while the chart is being moved. Causing a lower resolution (faster) chart
+to be rendered during animation operations.
+
+### Methods
+
+#### `g.setStart(start)`, `g.setRange(range)`, `g.setStartRange(start,range)`
+
+Actively set the time and zoom level for the chart. This will also update the chart.
+
+#### `g.getStart()`, `g.getRange()`
+
+Request the current time and zoom level.
+
+#### `g.update()`
+
+Cause the chart to be updated even when neither start nor range are changed.
+
+#### `g.dispose()`
+
+Remove ourselfs from the img.
+
+### Events
+
+#### `changeRange`, `changeStart`
+
+These two events get emited if the chart if moved or zoomed.
+
+```JavaScript
+g.on('changeRange',function(range){
+    console.log('new range:' + range);
+});
 
 rrdGraphCtrl.js
 ---------------
@@ -59,14 +135,7 @@ For now this is all the documentation there is ...
 
             // 'activate' the charts
             var graph = q('.graph').rrdGraphPng({
-                // the following is the default configuration, no need to repeat it
-                // in actual use
-                canvasPadding: 100,  // how much is the drawing canvas padded with white space
-                initialStart : (new Date()).getTime() / 1000 - 24*3600, // start time for in epoch format
-                initialRange: 24*3600, // initial time range for the chart
-                moveZoom: 1, // zoom factor to use while the chart is moving (reduces load on the server)
-                cursorUrl: '.', // location of the .cur files relative to the location of the html file
-                autoUpdate: true // automatically request a new chart when it is out of data and scroll with time
+                canvasPadding: 120
             });
 
             // crate a control panel and attach it to the charts
