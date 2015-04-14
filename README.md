@@ -95,7 +95,7 @@ For now this is all the documentation there is ...
                 switchToCustomOnStartChange: true // switch time range to 'custom' if chart time is changed
             });
 
-            <!-- you can also remove all the magic again -->
+            // you can also remove all the magic again
             q('#button').on('click',function(){
                 q('#ctrl').dispose();
                 q('.graph').dispose();
