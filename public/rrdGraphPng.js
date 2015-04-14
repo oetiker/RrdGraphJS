@@ -35,10 +35,10 @@ qxWeb.define('rrdGraphPng',{
             cursorUrl: '.',
             autoUpdate: true
         },
-        rrdGraph: function(cfg){
-            var rrdGraph = new rrdGraphPng(this,cfg);
-            rrdGraph.init(cfg);
-            return rrdGraph;
+        rrdGraphPng: function(cfg){
+            var png = new rrdGraphPng(this,cfg);
+            png.init(cfg);
+            return png;
         }
     },
 
@@ -450,7 +450,7 @@ qxWeb.define('rrdGraphPng',{
     },
 
     defer : function(statics) {
-        qxWeb.$attach({rrdGraph : statics.rrdGraph});
+        qxWeb.$attach({rrdGraphPng : statics.rrdGraphPng});
     }
 });
 

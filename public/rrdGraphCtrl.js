@@ -46,11 +46,11 @@ qxWeb.define('rrdGraphCtrl',{
             switchToCustomOnStartChange: true
 
         },
-        rrdGraphCtrl: function(rrdGraph,cfg){
-            var rrdGraphCtrl = new rrdGraphCtrl(this);
+        rrdGraphCtrl: function(png,cfg){
+            var ctrl = new rrdGraphCtrl(this);
 
-            rrdGraphCtrl.init(rrdGraph,cfg);
-            return rrdGraphCtrl;
+            ctrl.init(png,cfg);
+            return ctrl;
         }
     },
 

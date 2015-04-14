@@ -11,7 +11,7 @@ drawn at the browser end.
 After initial experiments with jQuery, I have switched to [qooxdoo
 Website](http://www.qooxdoo.org) as a base library.  It is a bit larger than
 jQuery, but the advantage is, that it provides a host of features I would
-have had to source from thridparty libraries or write myself otherwhise. 
+have had to source from thridparty libraries or write myself otherwhise.
 Notably the event normalization which made the implementation of the chart
 interaction much simpler.
 
@@ -75,6 +75,10 @@ Initial time range for the chart in seconds. Default: `24*3600`
 
 The `moveZoom` value  will show up in `{{zoom}}` while the chart is being moved. Causing a lower resolution (faster) chart
 to be rendered during animation operations.
+
+#### `autoUpdate`
+
+When the current time is in view on the chart, reload the chart automatically and shift it, so that it moves with the time. Default: `true`
 
 ### Methods
 
