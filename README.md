@@ -7,6 +7,14 @@ have the browser request freshly rendered images from the server, according
 to the users interactions.  And the more complex one where the images are
 drawn at the browser end.
 
+After initial experiments with jQuery, I have switched to
+[http://www.qooxdoo.org](qxWeb) as implementation library.  It is a bit
+larger than jQuery, but the advantage is that it provides a number of
+features which I would have to source from thridparty libraries or write
+myself to make this work with jQuery.  Notably the event handling and a
+much mor structured aproach to the implementation of plugin modules.
+
+
 rrdGraphPng.js
 --------------
 RrdGraphPng.js kicks your RRD graphs into life by requesting new bitmaps from the server as
