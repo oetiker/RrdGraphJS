@@ -41,7 +41,7 @@ qxWeb.define('rrdGraphCtrl',{
                 "12 Months":        { order: 13, len: 365*24*3600}
             },
             initialTimeRange: 'Today',
-            hideTimeBox: false,
+            showTimeBox: true,
             resetTimeOnDateChange: false,
             switchToCustomOnStartChange: true
 
@@ -89,7 +89,7 @@ qxWeb.define('rrdGraphCtrl',{
             calendar.setValue(new Date());
 
             var timeBox = qxWeb.create('<input class="qx-datepicker" size="10" type="text" value="00:00:00" />');
-            if (this.getConfig('hideTimeBox')){
+            if (! this.getConfig('showTimeBox')){
                 timeBox.hide();
             }
             timeBox.appendTo(div);

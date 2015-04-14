@@ -95,11 +95,53 @@ These two events get emited if the chart if moved or zoomed.
 g.on('changeRange',function(range){
     console.log('new range:' + range);
 });
+```
 
 rrdGraphCtrl.js
 ---------------
 Is a control panel for explicitly choosing what information the charts should show. It works with two way data binding. As you manipulate the graph with your pointer, the control panel content will change accordingly.
 
+
+### Instantiation
+
+```JavaScript
+var c = q(selector).rrdGraphCtrl(g,configMap);
+```
+
+The selector is expected to pick up a `<div>` tag. The control elements get added into the div tag.
+
+```HTML
+<div class="ctrl"></div>
+```
+
+### Configuration Properties
+
+#### `timeRanges`
+
+A map of pre configured time ranges. See the source for details.
+
+#### `initialTimeRange`
+
+Which time range to select at the start. Default: `Today`.
+
+#### `showTimeBox`
+
+Display the time entry field. Default `true`
+
+#### `resetTimeOnDateChange`
+
+Reset the time to `0:00` when a new date is selected.
+Default: `false`
+
+#### `switchToCustomOnStartChange`
+
+Switch the time range selector to `custom` if the graph start time changes. Default `true`
+
+### Methods
+
+#### `c.dispose()`
+
+Remove ourselfs from the img.
 
 rrdGraphSvg.js
 --------------
@@ -122,7 +164,7 @@ For now this is all the documentation there is ...
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link href="rrdGraphCtrl.css" rel="stylesheet">
-    <!-- the modules are implmented on top of the qxWeb library
+    <!-- the modules are implemented on top of the qxWeb library
          from www.qooxdoo.org. It provides excellent
          modularization and event normalization support out of
          the box and thus made implementation of these
@@ -140,28 +182,8 @@ For now this is all the documentation there is ...
 
             // crate a control panel and attach it to the charts
             q('#ctrl').rrdGraphCtrl(graph,{
-                // default options
-                timeRanges: { // the content of the time range select box
-                    "Last 60 Minutes":  { order: 0, len: 60, end: 'minute' },
-                    "Last 24 Hours":    { order: 1, len: 24, end: 'hour' },
-                    "Last 7 Days":      { order: 2, len: 7,  end: 'day' },
-                    "Last 31 Days":     { order: 3, len: 31, end: 'day' },
-                    "Last 12 Months":   { order: 4, len: 12, end: 'month' },
-                    "Today":            { order: 5, len: 1,  end: 'day' },
-                    "This Week":        { order: 6, len: 1,  end: 'week' },
-                    "This Month":       { order: 7, len: 1,  end: 'month' },
-                    "This Year":        { order: 8, len: 1,  end: 'year' },
-                    "60 Minutes":       { order: 9, len: 3600},
-                    "12 Hours":         { order: 10, len: 12*3600},
-                    "24 Hours":         { order: 11, len: 24*3600},
-                    "7 Days":           { order: 12, len: 7*24*3600},
-                    "4 Weeks":          { order: 13, len: 4*7*24*3600},
-                    "12 Months":        { order: 13, len: 365*24*3600}
-                },
-                initialTimeRange: 'Today',  // name of the time range to select initially
-                hideTimeBox: false, // hide the time entry field
-                resetTimeOnDateChange: false, // reset the time to midnight on date-change
-                switchToCustomOnStartChange: true // switch time range to 'custom' if chart time is changed
+                initialTimeRange: 'Last 60 Minutes',
+                resetTimeOnDateChange: true
             });
 
             // you can also remove all the magic again
