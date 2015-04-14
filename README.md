@@ -88,6 +88,12 @@ For now this is all the documentation there is ...
                 resetTimeOnDateChange: false, // reset the time to midnight on date-change
                 switchToCustomOnStartChange: true // switch time range to 'custom' if chart time is changed
             });
+
+            <!-- you can also remove all the magic again -->
+            q('#button').on('click',function(){
+                q('#ctrl').dispose();
+                q('.graph').dispose();
+            });
         });
     </script>
 </head>
@@ -110,6 +116,7 @@ For now this is all the documentation there is ...
         data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
     ></div>
 
+    <button id="remove">Remove it all</button>
 </body>
 </html>
 ```
