@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="rrdGraphCtrl.css" rel="stylesheet">
+    <!-- the modules are implemented on top of the qxWeb library
+         from www.qooxdoo.org. It provides excellent
+         modularization and event normalization support out of
+         the box and thus made implementation of these
+         modules much simpler -->
+    <script type="text/javascript" src="q-4.1.min.js"></script>
+    <script type="text/javascript" src="rrdGraphPng.js"></script>
+    <script type="text/javascript" src="rrdGraphCtrl.js"></script>
+    <script type="text/javascript">
+        q.ready(function(){
+
+            // 'activate' the charts
+            var graph = q('.graph').rrdGraphPng({
+                canvasPadding: 120
+            });
+
+            // crate a control panel and attach it to the charts
+            q('#ctrl').rrdGraphCtrl(graph,{
+                initialTimeRange: 'Last 60 Minutes',
+                resetTimeOnDateChange: true
+            });
+
+            // you can also remove all the magic again
+            q('#button').on('click',function(){
+                q('#ctrl').dispose();
+                q('.graph').dispose();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="ctrl"></div>
+
+    <div><img
+        style="width:695px;height:238px" class="graph"
+        data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
+    /></div>
+
+    <div><img
+        style="width:695px;height:238px" class="graph"
+        data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
+    /></div>
+
+    <button id="remove">Remove it all!</button>
+</body>
+</html>
