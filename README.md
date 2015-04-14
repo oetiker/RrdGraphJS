@@ -195,13 +195,7 @@ For now this is all the documentation there is ...
     </script>
 </head>
 <body>
-    <!-- the chart control panel will be inserted here -->
     <div id="ctrl"></div>
-
-    <!-- the img tags are expected to contain a special data-src-template
-         property containing the image url, with template tags inserted. The random
-         tag is intended to make sure charts do not get cached on the way. This is especially
-         important when viewing current data -->
 
     <div><img
         style="width:695px;height:238px" class="graph"
@@ -213,7 +207,7 @@ For now this is all the documentation there is ...
         data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
     /></div>
 
-    <button id="remove">Remove it all</button>
+    <button id="remove">Remove it all!</button>
 </body>
 </html>
 ```
