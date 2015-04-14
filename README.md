@@ -11,7 +11,7 @@ drawn at the browser end.
 After initial experiments with jQuery, I have switched to [qooxdoo
 Website](http://www.qooxdoo.org) as a base library.  It is a bit larger than
 jQuery, but the advantage is, that it provides a host of features I would
-have had to source from thridparty libraries or write myself otherwhise.
+have had to source from third party libraries or write myself otherwise.
 Notably the event normalization which made the implementation of the chart
 interaction much simpler.
 
@@ -96,13 +96,13 @@ Cause the chart to be updated even when neither start nor range are changed.
 
 #### `g.dispose()`
 
-Remove ourselfs from the img.
+Remove ourselves from the img.
 
 ### Events
 
 #### `changeRange`, `changeStart`
 
-These two events get emited if the chart if moved or zoomed.
+These two events get emitted if the chart if moved or zoomed.
 
 ```JavaScript
 g.on('changeRange',function(range){
@@ -154,12 +154,12 @@ Switch the time range selector to `custom` if the graph start time changes. Defa
 
 #### `c.dispose()`
 
-Remove ourselfs from the img.
+Remove ourselves from the div.
 
 rrdGraphSvg.js
 --------------
 rrdGraphSvg.js implements RRD graphs on the browser side. It leverages the wonderful
-d3.js library for lowlevel data manipulation.  It requires the output of
+d3.js library for low-level data manipulation.  It requires the output of
 xport to get to the actual data. Since very few monitoring systems readily provide xport data access, this variant is more difficult to implement in an existing system.
 
 Also the implementation does not yet cover all the drawing instructions available in rrd_graph. Especially for `VDEF` and `GPRINT` statements there is not even a plan yet on how to implement them.
