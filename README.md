@@ -206,12 +206,12 @@ For now this is all the documentation there is ...
     <div><img
         style="width:695px;height:238px" class="graph"
         data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
-    ></div>
+    /></div>
 
     <div><img
         style="width:695px;height:238px" class="graph"
         data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
-    ></div>
+    /></div>
 
     <button id="remove">Remove it all</button>
 </body>
