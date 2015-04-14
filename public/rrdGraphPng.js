@@ -32,7 +32,8 @@ qxWeb.define('rrdGraphPng',{
             initialStart : (new Date()).getTime() / 1000 - 24*3600,
             initialRange: 24*3600,
             moveZoom: 1,
-            cursorUrl: '.'
+            cursorUrl: '.',
+            autoUpdate: true
         },
         rrdGraph: function(cfg){
             var rrdGraph = new rrdGraphPng(this,cfg);
@@ -75,7 +76,9 @@ qxWeb.define('rrdGraphPng',{
                 this.__addRoll(img);
                 img.emit('update');
             },this);
-            this.__addSyncCharts();
+            if (this.getConfig('autoUpdate')){
+                this.__addSyncCharts();
+            }
             return true;
         },
 
@@ -139,7 +142,9 @@ qxWeb.define('rrdGraphPng',{
                     lastNow = false;
                 }
             };
-            this.__syncJob = window.setInterval(syncCharts,1000);
+            if (this.getConfig('autoUpdate')){
+                this.__syncJob = window.setInterval(syncCharts,1000);
+            }
         },
 
         __buildUrl: function(img,zoom){
@@ -437,7 +442,9 @@ qxWeb.define('rrdGraphPng',{
             this._forEachElementWrapped(function(img) {
                 img.emit('qxRrdDispose');
             });
-            window.clearInterval(this.__syncJob);
+            if (this.__syncJob){
+                window.clearInterval(this.__syncJob);
+            }
             return this.base(arguments);
         }
     },

@@ -60,7 +60,8 @@ For now this is all the documentation there is ...
                 initialStart : (new Date()).getTime() / 1000 - 24*3600, // start time for in epoch format
                 initialRange: 24*3600, // initial time range for the chart
                 moveZoom: 1, // zoom factor to use while the chart is moving (reduces load on the server)
-                cursorUrl: '.' // location of the .cur files relative to the location of the html file
+                cursorUrl: '.', // location of the .cur files relative to the location of the html file
+                autoUpdate: true // automatically request a new chart when it is out of data and scroll with time
             });
 
             // crate a control panel and attach it to the charts
