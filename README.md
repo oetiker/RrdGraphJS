@@ -49,6 +49,7 @@ For now this is all the documentation there is ...
     <link href="rrdGraphCtrl.css" rel="stylesheet">
     <script type="text/javascript" src="q-4.1.min.js"></script>
     <script type="text/javascript" src="rrdGraphPng.js"></script>
+    <script type="text/javascript" src="rrdGraphCtrl.js"></script>
     <script type="text/javascript">
         q.ready(function(){
 
