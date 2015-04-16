@@ -80,6 +80,11 @@ to be rendered during animation operations.
 
 When the current time is in view on the chart, reload the chart automatically and shift it, so that it moves with the time. Default: `true`
 
+#### `gridFillStyleA`, `gridFillStyleB`
+
+While interacting with the graph, rrdGraphPng will overlay it with a generated grid, providing immediate visual response even when the
+server is not as fast in generating new images. With this setting, you can modify the color of the grid. Default: `rgba(0,0,0,0.08)` and `rgba(255,255,255,0.08)` respectively.
+
 ### Methods
 
 #### `g.setStart(start)`, `g.setRange(range)`, `g.setStartRange(start,range)`

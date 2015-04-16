@@ -33,7 +33,9 @@ qxWeb.define('rrdGraphPng',{
             initialRange: 24*3600,
             moveZoom: 1,
             cursorUrl: '.',
-            autoUpdate: true
+            autoUpdate: true,
+            gridFillStyleA: 'rgba(0,0,0,0.08)',
+            gridFillStyleB: 'rgba(255,255,255,0.08)'
         },
         rrdGraphPng: function(cfg){
             var png = new rrdGraphPng(this,cfg);
@@ -303,10 +305,12 @@ qxWeb.define('rrdGraphPng',{
             var xIncr = initialRange / this.__range * skip;
             var xOff = (width / this.__range * (initialStart - this.__start)) % xIncr;
             var xWidth = xIncr/2;
+            var gridStyleA = this.getConfig('gridFillStyleA');
+            var gridStyleB = this.getConfig('gridFillStyleB');
             for (var x=-xIncr+xOff;x<width;x+=xIncr){
-                ctx.fillStyle = 'rgba(0,0,0,0.02)';
+                ctx.fillStyle = gridStyleA,
                 ctx.fillRect(x,0,xWidth,height);
-                ctx.fillStyle = 'rgba(255,255,255,0.02)';
+                ctx.fillStyle = gridStyleB,
                 ctx.fillRect(x+xWidth,0,xWidth,height);
             }
         },
