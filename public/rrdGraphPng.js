@@ -158,7 +158,8 @@ qxWeb.define('rrdGraphPng',{
                 start: start,
                 end: start + this.__range,
                 zoom: zoom ? zoom : 1,
-                random: Math.round(Math.random()*1000000000).toString(36)
+                random: Math.round(Math.random()*1000000000).toString(36),
+		rrd_file : rrd_file,
             });
         },
 

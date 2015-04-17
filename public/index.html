@@ -12,6 +12,8 @@
     <script type="text/javascript" src="rrdGraphPng.js"></script>
     <script type="text/javascript" src="rrdGraphCtrl.js"></script>
     <script type="text/javascript">
+        var rrd_file = 'my-data.rrd';
+
         q.ready(function(){
 
             // 'activate' the charts
@@ -27,12 +29,13 @@
             q('#ctrl').rrdGraphCtrl(graph,{
                 initialTimeRange: 'Last 7 Days',
                 resetTimeOnDateChange: true
+                ,rrd_file: rrd_file
             });
 
-            // does not work:
             q('#ctrl2').rrdGraphCtrl(graph2,{
                 initialTimeRange: 'Last 31 Days',
                 resetTimeOnDateChange: true
+                ,rrd_file: rrd_file
             });
 
             // you can also remove all the magic again
@@ -48,7 +51,7 @@
 
     <div><img
         style="width:695px;height:238px" class="graph"
-        data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
+        data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}&amp;rrd_file={{rrd_file}}"
     /></div>
 
     <br />
@@ -56,7 +59,7 @@
     <div id="ctrl2"></div>
     <div><img
         style="width:695px;height:238px" class="graph2"
-        data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
+        data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}&amp;rrd_file={{rrd_file}}"
     /></div>
 
     <button id="remove">Remove it all!</button>
