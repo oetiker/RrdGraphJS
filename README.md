@@ -85,6 +85,13 @@ When the current time is in view on the chart, reload the chart automatically an
 While interacting with the graph, rrdGraphPng will overlay it with a generated grid, providing immediate visual response even when the
 server is not as fast in generating new images. With this setting, you can modify the color of the grid. Default: `rgba(0,0,0,0.08)` and `rgba(255,255,255,0.08)` respectively.
 
+#### `cursorUrl`
+
+The package comes with custom cursor images. The images are activated with inline styles on the dom node. This means that the location of the cursor image must be expressed relative
+to the location of the index.html file. We assume the cursor files are in the same directory as the `rrdGraphPng.js` file. As long as you have a script tag loading that exact filename,
+everything should work automatically. If you use a script compressor and there is no mention of the rrdGraphPng.js file in the header anymore, then you can use the cursorUrl to specify the location
+of the `.cur` files. Default: the directory where your `rrdGraphPng.js` file is stored.
+
 ### Methods
 
 #### `g.setStart(start)`, `g.setRange(range)`, `g.setStartRange(start,range)`
