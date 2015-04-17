@@ -19,9 +19,19 @@
                 canvasPadding: 120
             });
 
+            var graph2 = q('.graph2').rrdGraphPng({
+                canvasPadding: 120
+            });
+
             // crate a control panel and attach it to the charts
             q('#ctrl').rrdGraphCtrl(graph,{
-                initialTimeRange: 'Last 60 Minutes',
+                initialTimeRange: 'Last 7 Days',
+                resetTimeOnDateChange: true
+            });
+
+            // does not work:
+            q('#ctrl2').rrdGraphCtrl(graph2,{
+                initialTimeRange: 'Last 31 Days',
                 resetTimeOnDateChange: true
             });
 
@@ -41,8 +51,11 @@
         data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
     /></div>
 
+    <br />
+
+    <div id="ctrl2"></div>
     <div><img
-        style="width:695px;height:238px" class="graph"
+        style="width:695px;height:238px" class="graph2"
         data-src-template="graphB?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
     /></div>
 
