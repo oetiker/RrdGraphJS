@@ -2,6 +2,7 @@
 use Mojolicious::Lite;
 use RRDs;
 
+my $rrd_file = './my-data.rrd';
 
 get '/' => sub {
     my $self = shift;
@@ -13,7 +14,7 @@ get '/graph:l' => sub {
 
     my %p;
     for ('start', 'end', 'width', 'height'){
-        $p{$_} =  $c->tx->req->url->query->param($_);
+        $p{$_} =  $c->param($_);
     }
 
     my $num_days=30;
@@ -22,7 +23,7 @@ get '/graph:l' => sub {
             '--end', $p{end},
             '-w', $p{width}, '-h', $p{height},
             '-',
-            'DEF:solar=my-data.rrd:watt:AVERAGE',
+            "DEF:solar=$rrd_file:watt:AVERAGE",
             'AREA:solar#03bde9'
         );
     if(my $error = RRDs::error){
