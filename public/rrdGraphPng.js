@@ -32,7 +32,7 @@ qxWeb.define('rrdGraphPng',{
             initialStart : (new Date()).getTime() / 1000 - 24*3600,
             initialRange: 24*3600,
             moveZoom: 1,
-            cursorUrl: (q('script[src$="rrdGraphdPng.js"]')[0]||{src:'./.'}).src.replace(/\/[^\/]*$/,''),
+            cursorUrl: (q('script[src$="rrdGraphPng.js"]')[0]||{src:'./.'}).src.replace(/\/[^\/]*$/,''),
             autoUpdate: true,
             gridFillStyleA: 'rgba(0,0,0,0.08)',
             gridFillStyleB: 'rgba(255,255,255,0.08)'
