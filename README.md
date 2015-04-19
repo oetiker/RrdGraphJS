@@ -118,7 +118,9 @@ Remove ourselves from the img.
 This events get emitted if the chart if moved or zoomed.
 
 ```JavaScript
-g.on('changeStartRange',function(start,range){
+g.on('changeStartRange',function(e){
+    var start = e.start;
+    var range = e.range;
     console.log('new start:' + start);
     console.log('new range:' + range);
 });

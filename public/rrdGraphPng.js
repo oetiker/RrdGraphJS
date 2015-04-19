@@ -257,7 +257,7 @@ qxWeb.define('rrdGraphPng',{
             var that = this;
             var syncUp = qxWeb.func.debounce(function(){
                 that.update();
-                that.emit('changeStartRange',that.__start,that._range);
+                that.emit('changeStartRange',{start:that.__start,range:that._range});
             },200);
             var xPos = img.getWidth()/2;
             var onMove = function(e){
@@ -397,7 +397,7 @@ qxWeb.define('rrdGraphPng',{
                 this.__clearGrid(img);
                 this.update();
                 if (initialRange != this.__range || initialStart != this.__start){
-                    this.emit('changeStartRange',thias.__start,this.__range);
+                    this.emit('changeStartRange',{start:this.__start,range:this.__range});
                 }
                 trackLock = false;
                 canvas.setStyle('cursor','url(' + this.getConfig('cursorUrl') + '/MoveCursor.cur), move');

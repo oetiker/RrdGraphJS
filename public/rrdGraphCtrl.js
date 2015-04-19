@@ -132,7 +132,10 @@ qxWeb.define('rrdGraphCtrl',{
             };
             timeBox.on('keypress',onKeyPressTbox,this);
             var lastDate;
-            var onChagneStartRange = function(start,range){
+            var onChangeStartRange = function(e){
+                var start = e.start;
+                var range = e.range;
+                console.log(start,range);
                 if (isNaN(start)) return;
                 var date = new Date(start * 1000);
                 if (date != lastDate){
@@ -143,17 +146,19 @@ qxWeb.define('rrdGraphCtrl',{
                     lastDate = date;
                 }
             };
-            rrdGraphPng.eq(0).on('changeStartRange',onChagneStartRange,this);
+            rrdGraphPng.eq(0).on('changeStartRange',onChangeStartRange,this);
 
-            this.on('changeRRdGraphPngBinding'){
+            var onChangeRrdGraphPngBinding = function(){
                 rrdGraphPng.eq(0).off('changeStartRange',onChangeStartRange,this);
                 rrdGraphPng = this.__rrdGraphPng;
-                rrdGraphPng.eq(0).on('changeStartRange',onChagneStartRange,this);
+                rrdGraphPng.eq(0).on('changeStartRange',onChangeStartRange,this);
                 rrdGraphPng.setStart(getDateTime());
 
-            },this);
-
+            };
+            this.on('changeRrdGraphPngBinding',onChangeRrdGraphPngBinding,this);
+     
             div.once('qxRrdDispose',function(){
+                this.off('changeRrdGraphPngBinding',onChangeRrdGraphPngBinding,this);
                 rrdGraphPng.eq(0).off('changeStartRange',onChangeStartRange,this);
                 timeBox.off('change',onChangeTBox,this);
                 timeBox.off('keypress',onKeyPressTbox,this);
@@ -256,7 +261,7 @@ qxWeb.define('rrdGraphCtrl',{
                             var start = info.end - range;
                             lastRange = range;
                             rrdGraphPng.setStartRange(start,range);
-                            rrdGraphPng.emit('changeStartRange',start,null);
+                            rrdGraphPng.emit('changeStartRange',{start:start,range:null});
                         }
                         else {
                             console.log("unknown end type "+item.end);
@@ -274,7 +279,9 @@ qxWeb.define('rrdGraphCtrl',{
             rangeSelector.on('change',onRangeSelectorChange,this);
 
 
-            var onChangeStartRange = function(start,range){
+            var onChangeStartRange = function(e){
+                var start = e.start;
+                var range = e.range;
                 if (range == null) return;
                 lastRange = range;
                 for (var key in tr){
@@ -285,9 +292,9 @@ qxWeb.define('rrdGraphCtrl',{
                             var newRange = info.range;
                             var newStart = info.end - range;
                             if (Math.abs(newRange - range) / range < 0.05
-                                && Math.abs(newStart - start) / start < 0.05 ) {
+                                && Math.abs(newStart - start) / range < 0.05 ) {
                                 rangeSelector.setValue(key);
-                                break;
+                                return;
                             }
                         }
                         else {
@@ -296,10 +303,10 @@ qxWeb.define('rrdGraphCtrl',{
                         }
                     }
                     else {
-                        var newRange = info.range;
+                        var newRange = item.len;
                         if (Math.abs(newRange - range) / range < 0.05){
                             rangeSelector.setValue(key);
-                            break;
+                            return;
                         }
                     }
                 }
