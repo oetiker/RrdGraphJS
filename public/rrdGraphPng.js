@@ -24,6 +24,7 @@
  *
  */
 
+
 qxWeb.define('rrdGraphPng',{
     extend: qxWeb.$$qx.ui.website.Widget,
     statics: {
@@ -31,8 +32,7 @@ qxWeb.define('rrdGraphPng',{
             canvasPadding: 100,
             initialStart : (new Date()).getTime() / 1000 - 24*3600,
             initialRange: 24*3600,
-            moveZoom: 1,
-            cursorUrl: (q('script[src$="rrdGraphPng.js"]')[0]||{src:'./.'}).src.replace(/\/[^\/]*$/,''),
+            moveZoom: 1, 
             autoUpdate: true,
             gridFillStyleA: 'rgba(0,0,0,0.08)',
             gridFillStyleB: 'rgba(255,255,255,0.08)'
@@ -51,11 +51,22 @@ qxWeb.define('rrdGraphPng',{
     members : {
         __start: null,
         __range: null,
-        __lastGridPaint: null,
         init: function(cfg){
             if (!this.base(arguments)) {
                 return false;
             };
+            var that = this;
+            try {
+                throw new Error('');
+            } catch (e){
+                // this is voodoo, but it does often detect where the javascript file
+                // lives and thus we can hope to find the cursor files there too
+                that.setConfig('cursorUrl',e.stack.replace(/[^$]*http/,'http').replace(/[^\/]*\.js[^$]*/,''));
+            };
+
+            // update the grid no more then 30 times a second
+            this.__paintGrid = qxWeb.func.throttle(this.__paintGridReal,32);
+
             if (cfg){
                 for (var key in cfg){
                     this.setConfig(key,cfg[key])
@@ -295,24 +306,23 @@ qxWeb.define('rrdGraphPng',{
             //    img.__canvas.off('roll',onRoll,this);
             //},this);
         },
-        __paintGrid: function(img,initialRange,initialStart){
+        __paintGridReal: function(img,initialRange,initialStart){
             var ctx = img.__ctx;
             var width = img.getWidth();
             var height = img.getHeight();
-            var skip = 60;
-            var yOffset = Math.round((height - Math.round(height/skip)*skip)/2);
-            ctx.clearRect(0,0,width,height);
-            var xIncr = initialRange / this.__range * skip;
-            var xOff = (width / this.__range * (initialStart - this.__start)) % xIncr;
-            var xWidth = xIncr/2;
+            var skip = 100;
+            var xIncr = Math.round(initialRange / this.__range * skip);
+            var xOff = Math.round((width / this.__range * (initialStart - this.__start)) % xIncr);
+            var xWidth = Math.round(xIncr/2);
             var gridStyleA = this.getConfig('gridFillStyleA');
             var gridStyleB = this.getConfig('gridFillStyleB');
+            ctx.clearRect(0,0,width,height);
             for (var x=-xIncr+xOff;x<width;x+=xIncr){
-                ctx.fillStyle = gridStyleA,
-                ctx.fillRect(x,0,xWidth,height);
-                ctx.fillStyle = gridStyleB,
-                ctx.fillRect(x+xWidth,0,xWidth,height);
-            }
+                 ctx.fillStyle = gridStyleA,
+                 ctx.fillRect(x,0,xWidth,height);
+                 ctx.fillStyle = gridStyleB,
+                 ctx.fillRect(x+xWidth,0,xWidth,height);
+            };
         },
         __clearGrid: function(img){
             var ctx = img.__ctx;
@@ -333,6 +343,7 @@ qxWeb.define('rrdGraphPng',{
 
             var onPointerMove = function(e){
                 if (!active) return;
+                if (e.pointerType == 'touch' && e._original.touches.length > 1) return;
                 var delta = {
                     x: e.pageX - pointerOrigin.x,
                     y: e.pageY - pointerOrigin.y

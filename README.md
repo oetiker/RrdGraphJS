@@ -87,10 +87,11 @@ server is not as fast in generating new images. With this setting, you can modif
 
 #### `cursorUrl`
 
-The package comes with custom cursor images. The images are activated with inline styles on the dom node. This means that the location of the cursor image must be expressed relative
-to the location of the index.html file. We assume the cursor files are in the same directory as the `rrdGraphPng.js` file. As long as you have a script tag loading that exact filename,
-everything should work automatically. If you use a script compressor and there is no mention of the rrdGraphPng.js file in the header anymore, then you can use the cursorUrl to specify the location
-of the `.cur` files. Default: the directory where your `rrdGraphPng.js` file is stored.
+The package comes with custom cursor images. The images are activated with
+inline styles on the dom node.  This means that the location of the cursor
+image must be expressed relative to the location of the index.html file.  We
+use some magic in  `rrdGraphPng.js` to deterime this location. But if it fails
+you may just want to explicitly configure it.
 
 ### Methods
 
