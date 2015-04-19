@@ -113,12 +113,13 @@ Remove ourselves from the img.
 
 ### Events
 
-#### `changeRange`, `changeStart`
+#### `changeStartRange`
 
-These two events get emitted if the chart if moved or zoomed.
+This events get emitted if the chart if moved or zoomed.
 
 ```JavaScript
-g.on('changeRange',function(range){
+g.on('changeStartRange',function(start,range){
+    console.log('new start:' + start);
     console.log('new range:' + range);
 });
 ```
@@ -159,11 +160,11 @@ Display the time entry field. Default `true`
 Reset the time to `0:00` when a new date is selected.
 Default: `false`
 
-#### `switchToCustomOnStartChange`
-
-Switch the time range selector to `custom` if the graph start time changes. Default `true`
-
 ### Methods
+
+#### `c.rebind(g)`
+
+Bind RrdGraphCtrl to a other instance of RrdGraphPng.
 
 #### `c.dispose()`
 

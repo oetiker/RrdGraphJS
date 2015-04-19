@@ -32,7 +32,7 @@ qxWeb.define('rrdGraphPng',{
             canvasPadding: 100,
             initialStart : (new Date()).getTime() / 1000 - 24*3600,
             initialRange: 24*3600,
-            moveZoom: 1, 
+            moveZoom: 1,
             autoUpdate: true,
             gridFillStyleA: 'rgba(0,0,0,0.08)',
             gridFillStyleB: 'rgba(255,255,255,0.08)'
@@ -148,7 +148,7 @@ qxWeb.define('rrdGraphPng',{
                         that.__start += increment;
                         lastEnd = that.__start + that.__range;
                         that.update();
-                        that.emit('changeStart',that.__start);
+                        that.emit('change',that.__start,that.__range);
                     }
                 }
                 else {
@@ -257,8 +257,7 @@ qxWeb.define('rrdGraphPng',{
             var that = this;
             var syncUp = qxWeb.func.debounce(function(){
                 that.update();
-                that.emit('changeRange',that.__range);
-                that.emit('changeStart',that.__start);
+                that.emit('changeStartRange',that.__start,that._range);
             },200);
             var xPos = img.getWidth()/2;
             var onMove = function(e){
@@ -397,11 +396,8 @@ qxWeb.define('rrdGraphPng',{
                 active = false;
                 this.__clearGrid(img);
                 this.update();
-                if (initialRange != this.__range){
-                    this.emit('changeRange',this.__range);
-                }
-                if (initialStart != this.__start){
-                    this.emit('changeStart',this.__start);
+                if (initialRange != this.__range || initialStart != this.__start){
+                    this.emit('changeStartRange',thias.__start,this.__range);
                 }
                 trackLock = false;
                 canvas.setStyle('cursor','url(' + this.getConfig('cursorUrl') + '/MoveCursor.cur), move');
