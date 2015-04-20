@@ -16,7 +16,8 @@
 
             // 'activate' the charts
             var graph = q('.graph').rrdGraphPng({
-                canvasPadding: 120
+                canvasPadding: 120,
+                initialStart: null
             });
 
             // crate a control panel and attach it to the charts
@@ -26,16 +27,24 @@
             });
 
             // you can also remove all the magic again
-            q('#button').on('click',function(){
-                q('#ctrl').dispose();
+            q('#rebinder').on('click',function(){
+                // q('#ctrl').dispose();
                 q('.graph').dispose();
+                var graph = q('.graph').rrdGraphPng({
+                    canvasPadding: 120,
+                    initialStart: null                    
+                }); 
+                q('#ctrl').rebind(graph);
             });
         });
     </script>
 </head>
 <body>
-    <div id="ctrl"></div>
+<!--    <button id="rebinder">Rebind</button> -->
 
+    <div id="ctrl"></div>
+    
+    
     <div><img
         style="width:695px;height:238px" class="graph"
         data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"

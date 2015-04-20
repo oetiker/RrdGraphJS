@@ -51,6 +51,7 @@ qxWeb.define('rrdGraphPng',{
     members : {
         __start: null,
         __range: null,
+        __syncJob: null,
         init: function(cfg){
             if (!this.base(arguments)) {
                 return false;
@@ -65,7 +66,7 @@ qxWeb.define('rrdGraphPng',{
             };
 
             // update the grid no more then 30 times a second
-            this.__paintGrid = qxWeb.func.throttle(this.__paintGridReal,32);
+            this.__paintGrid = qxWeb.func.throttle(this.__paintGridReal,32,{trailing: false});
 
             if (cfg){
                 for (var key in cfg){
@@ -163,6 +164,7 @@ qxWeb.define('rrdGraphPng',{
         __buildUrl: function(img,zoom){
             var template = img.getData('src-template');
             var start = this.__start;
+            if (start == null || isNaN(start)) return '';
             return qxWeb.template.render(template,{
                 width: img.getWidth(),
                 height: img.getHeight(),
@@ -231,10 +233,10 @@ qxWeb.define('rrdGraphPng',{
             };
             img.on('load',onLoad,this);
             var onUpdate = function(zoom){
+                var url = this.__buildUrl(img,zoom);
+                if (!url) return;
                 if (! loading){
                     loading = true;
-                    start = (new Date()).getTime();
-                    var url = this.__buildUrl(img,zoom);
                     img.setProperty('src',url);
                 }
                 else {
@@ -272,7 +274,6 @@ qxWeb.define('rrdGraphPng',{
             var dotOff = true;
             var killerId;
             var onRoll = function(e){
-                // console.log(e);
                 if (e.pointerType != "wheel" || !e._original.ctrlKey ) return;
                 e.preventDefault();
                 e.stopPropagation();
@@ -295,7 +296,6 @@ qxWeb.define('rrdGraphPng',{
                 },1000);
                 img.emit('update',this.getConfig('moveZoom'));
                 syncUp();
-                // console.log('roll');
             };
             img.__canvas.on('pointermove',onMove,this);
             img.__canvas.on('roll',onRoll,this);
@@ -358,7 +358,6 @@ qxWeb.define('rrdGraphPng',{
                 }
                 if (vertical){
                     if (e.pointerType == 'touch') return;
-                    //console.log(e);
                     if (! isNaN(xOrigin)){
                         this.__range = this.__rangeCap(initialRange*Math.pow(1.02,delta.y));
                         this.__start = Math.round(initialStart + (initialRange - this.__range)*xOrigin);
@@ -450,13 +449,15 @@ qxWeb.define('rrdGraphPng',{
             });
         },
         dispose: function(){
-            this._forEachElementWrapped(function(img) {
-                img.emit('qxRrdDispose');
-            });
             if (this.__syncJob){
                 window.clearInterval(this.__syncJob);
             }
-            return this.base(arguments);
+            this._forEachElementWrapped(function(img) {
+                img.emit('qxRrdDispose');
+                img.removeAttribute('unselectable');
+                img.removeAttribute('draggable');
+            });
+            return this.base(arguments);            
         }
     },
 

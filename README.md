@@ -65,7 +65,8 @@ is on the png image, this option allows you to provide a hint. Default: `100`
 
 #### `initialStart`
 
-Epoch time for the start of the chart as it is initially loaded. Default: `(new Date()).getTime() / 1000 - 24*3600`
+Epoch time for the start of the chart as it is initially loaded. Default: `(new Date()).getTime() / 1000 - 24*3600`. If you don't want an initial graph to get loaded,
+set this to 'null'. This is especially usefull if you want to use `rrdGraphPng` in connection with `rrdGraphCtrl`.
 
 #### `initialRange`
 
