@@ -66,7 +66,7 @@ qxWeb.define('rrdGraphPng',{
             };
 
             // update the grid no more then 30 times a second
-            this.__paintGrid = qxWeb.func.throttle(this.__paintGridReal,32);
+            this.__paintGrid = qxWeb.func.throttle(this.__paintGridReal,32,{trailing: false});
 
             if (cfg){
                 for (var key in cfg){
