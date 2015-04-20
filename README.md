@@ -153,6 +153,11 @@ A map of pre configured time ranges. See the source for details.
 
 Which time range to select at the start. Default: `Today`.
 
+#### `rangeMatchPrecision`
+
+How precisely should the range selector work as it is magically switching
+the range displayed as the graph is zoomed and scrolled. Default is 0.05.
+
 #### `showTimeBox`
 
 Display the time entry field. Default `true`

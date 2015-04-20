@@ -41,6 +41,7 @@ qxWeb.define('rrdGraphCtrl',{
                 "12 Months":        { order: 13, len: 365*24*3600}
             },
             initialTimeRange: 'Today',
+            rangeMatchPrecision: 0.05,
             showTimeBox: true,
             resetTimeOnDateChange: false,
             switchToCustomOnStartChange: true
@@ -278,7 +279,7 @@ qxWeb.define('rrdGraphCtrl',{
             onRangeSelectorChange();
             rangeSelector.on('change',onRangeSelectorChange,this);
 
-
+            var precision = this.getConfig('rangeMatchPrecision');
             var onChangeStartRange = function(e){
                 var start = e.start;
                 var range = e.range;
@@ -291,8 +292,8 @@ qxWeb.define('rrdGraphCtrl',{
                         if (info){
                             var newRange = info.range;
                             var newStart = info.end - range;
-                            if (Math.abs(newRange - range) / range < 0.05
-                                && Math.abs(newStart - start) / range < 0.05 ) {
+                            if (Math.abs(newRange - range) / range <= precision
+                                && Math.abs(newStart - start) / range <= precision ) {
                                 rangeSelector.setValue(key);
                                 return;
                             }
