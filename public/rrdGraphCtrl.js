@@ -44,8 +44,8 @@ qxWeb.define('rrdGraphCtrl',{
             rangeMatchPrecision: 0.05,
             showTimeBox: true,
             resetTimeOnDateChange: false,
-            switchToCustomOnStartChange: true
-
+            switchToCustomOnStartChange: true,
+            momentTz: null
         },
         rrdGraphCtrl: function(rrdGraphPng,cfg){
             var ctrl = new rrdGraphCtrl(this);
@@ -108,7 +108,15 @@ qxWeb.define('rrdGraphCtrl',{
                     }
                 });
                 timeBox.setValue([0,1,2].map(function(i){return ('0'+time[i]).slice(-2)}).join(':'));
-                var start = calendar.getValue().getTime()/1000+time[0]*3600+time[1]*60+time[2];
+                var start;
+                var momentTz = this.getConfig('momentTz');
+                if (momentTz){
+                    start = moment.tz(moment(calendar.getValue()).format("YYYY-MM-DD"),momentTz).format('X');
+                }
+                else {
+                    start = calendar.getValue().getTime()/1000
+                }
+                start += time[0]*3600+time[1]*60+time[2];
                 rrdGraphPng.setStart(start);
                 that.setProperty('start',start);
                 that.emit('syncRrdGraphCtrlRange',start);                                                
@@ -142,10 +150,18 @@ qxWeb.define('rrdGraphCtrl',{
                 var start = e.start;
                 var range = e.range;
                 if (isNaN(start)) return;
-                var date = new Date(start * 1000);
+                var momentTz = this.getConfig('momentTz');
+                var date;
+                
+                if (momentTz){
+                    date = new Date(moment.tz(start * 1000,momentTz).format("YYYY-MM-DDTHH:mm:ss"));
+                }
+                else {
+                    date = new Date(start * 1000);
+                }
                 if (date != lastDate){
                     blockDate = true;
-                    calendar.setValue(new Date(date.getTime()));
+                    calendar.setValue(date);
                     var newTime = date.getHours()+':'+('0'+date.getMinutes()).slice(-2)+':'+('0'+date.getSeconds()).slice(-2);
                     timeBox.setValue(newTime);
                     lastDate = date;

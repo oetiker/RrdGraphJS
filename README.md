@@ -168,6 +168,16 @@ Display the time entry field. Default `true`
 Reset the time to `0:00` when a new date is selected.
 Default: `false`
 
+#### `momentTz`
+
+If you have loaded the `moment.js` and `moment-timezone-with-data.js`
+libraries, you can now use the `momentTz` property to set the timezone the
+control should operate in.
+
+If you want to change the timezone on an existing control, just run
+
+`ctrl.setConfig('momentTz','CET')`
+
 ### Methods
 
 #### `c.rebind(g)`
