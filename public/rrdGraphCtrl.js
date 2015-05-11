@@ -109,9 +109,9 @@ qxWeb.define('rrdGraphCtrl',{
                 });
                 timeBox.setValue([0,1,2].map(function(i){return ('0'+time[i]).slice(-2)}).join(':'));
                 var start;
-                var momentTz = this.getConfig('momentTz');
+                var momentTz = that.getConfig('momentTz');
                 if (momentTz){
-                    start = moment.tz(moment(calendar.getValue()).format("YYYY-MM-DD"),momentTz).format('X');
+                    start = parseInt(moment.tz(moment(calendar.getValue()).format("YYYY-MM-DD"),momentTz).format('X'));
                 }
                 else {
                     start = calendar.getValue().getTime()/1000
@@ -154,14 +154,14 @@ qxWeb.define('rrdGraphCtrl',{
                 var date;
                 
                 if (momentTz){
-                    date = new Date(moment.tz(start * 1000,momentTz).format("YYYY-MM-DDTHH:mm:ss"));
+                    date = new Date(moment.tz(start * 1000,momentTz).format("YYYY-MM-DD HH:mm:ss"));
                 }
                 else {
                     date = new Date(start * 1000);
                 }
                 if (date != lastDate){
                     blockDate = true;
-                    calendar.setValue(date);
+                    calendar.setValue(new Date(date.getTime()));
                     var newTime = date.getHours()+':'+('0'+date.getMinutes()).slice(-2)+':'+('0'+date.getSeconds()).slice(-2);
                     timeBox.setValue(newTime);
                     lastDate = date;
