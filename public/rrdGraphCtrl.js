@@ -111,7 +111,7 @@ qxWeb.define('rrdGraphCtrl',{
                 var start;
                 var momentTz = that.getConfig('momentTz');
                 if (momentTz){
-                    start = parseInt(moment.tz(moment(calendar.getValue()).format("YYYY-MM-DD"),momentTz).format('X'));
+                    start = parseInt(moment.tz(moment(calendar.getValue()).format("YYYY/MM/DD"),momentTz).format('X'));
                 }
                 else {
                     start = calendar.getValue().getTime()/1000
@@ -154,7 +154,7 @@ qxWeb.define('rrdGraphCtrl',{
                 var date;
                 
                 if (momentTz){
-                    date = new Date(moment.tz(start * 1000,momentTz).format("YYYY-MM-DD HH:mm:ss"));
+                    date = new Date(moment.tz(start * 1000,momentTz).format("YYYY/MM/DD HH:mm:ss"));
                 }
                 else {
                     date = new Date(start * 1000);
