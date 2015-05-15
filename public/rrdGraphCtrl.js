@@ -72,7 +72,7 @@ qxWeb.define('rrdGraphCtrl',{
             this._forEachElementWrapped(function(div,idx) {
                 div.setProperty('rrdGraphPng',rrdGraphPng);
                 div.__addDatePicker();
-                div.__addRangePicker();                
+                div.__addRangePicker();
             });
             return true;
         },
@@ -119,7 +119,7 @@ qxWeb.define('rrdGraphCtrl',{
                 start += time[0]*3600+time[1]*60+time[2];
                 rrdGraphPng.setStart(start);
                 that.setProperty('start',start);
-                that.emit('syncRrdGraphCtrlRange',start);                                                
+                that.emit('syncRrdGraphCtrlRange',start);
             };
 
             var blockDate = false;
@@ -152,7 +152,7 @@ qxWeb.define('rrdGraphCtrl',{
                 if (isNaN(start)) return;
                 var momentTz = this.getConfig('momentTz');
                 var date;
-                
+
                 if (momentTz){
                     date = new Date(moment.tz(start * 1000,momentTz).format("YYYY/MM/DD HH:mm:ss"));
                 }
@@ -176,7 +176,7 @@ qxWeb.define('rrdGraphCtrl',{
                 rrdGraphPng.eq(0).on('changeStartRange',onChangeStartRange,this);
             };
             this.on('rebindRrdGraphPng',onRebindRrdGraphPng,this);
-     
+
             this.once('qxRrdDispose',function(){
                 this.off('rebindRrdGraphPng',onRebindRrdGraphPng,this);
                 rrdGraphPng.eq(0).off('changeStartRange',onChangeStartRange,this);
@@ -188,7 +188,22 @@ qxWeb.define('rrdGraphCtrl',{
                 picker.remove();
             },this);
         },
+        __getRangeMoment: function(item){
+            var l = item.len;
+            var end = moment().tz(this.getConfig('momentTz'));
+            if (item.end) {
+                end.EndOf(item.end);
+            }
+            var start = end.clone().subtract(item.len,item.end ? item.end : 'second');
+            return {
+              end: end.unix(),
+              range: end.unix() - start.unix()
+            };
+        },
         __getRange: function(item){
+            if (this.getConfig('momentTz')){
+              return this.__getRangeMoment(item)
+            }
             var d = item.end;
             var l = item.len;
             var now = new Date;
@@ -334,13 +349,13 @@ qxWeb.define('rrdGraphCtrl',{
                 }
                 rangeSelector.setValue("0");
             };
-            
+
             var onSyncRange = function(start){
                 onChangeStartRange({start:start,range:this.getProperty('range')});
             };
-            
+
             this.on('syncRrdGraphCtrlRange',onSyncRange,this);
-            
+
 
             rrdGraphPng.eq(0).on('changeStartRange',onChangeStartRange,this);
 
@@ -351,7 +366,7 @@ qxWeb.define('rrdGraphCtrl',{
                 rrdGraphPng.setRange(this.getProperty('range'));
             };
             this.on('rebindRrdGraphPng',onRebindRrdGraphPng,this);
-            
+
             this.once('qxRrdDispose',function(){
                 this.off('rebindRrdGraphPng',onRebindRrdGraphPng,this);
                 this.off('syncRrdGraphCtrlRange',onSyncRange,this);
