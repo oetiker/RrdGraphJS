@@ -192,7 +192,11 @@ qxWeb.define('rrdGraphCtrl',{
             var l = item.len;
             var end = moment().tz(this.getConfig('momentTz'));
             if (item.end) {
+<<<<<<< HEAD
                 end.EndOf(item.end).add(1,'second');
+=======
+                end.endOf(item.end);
+>>>>>>> 37731beeb2ff92a373897047f1e38b6a6dd1e060
             }
             var start = end.clone().subtract(item.len,item.end ? item.end : 'second');
             return {
