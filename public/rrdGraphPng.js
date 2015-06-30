@@ -62,7 +62,9 @@ qxWeb.define('rrdGraphPng',{
             } catch (e){
                 // this is voodoo, but it does often detect where the javascript file
                 // lives and thus we can hope to find the cursor files there too
-                that.setConfig('cursorUrl',e.stack.replace(/[^$]*http/,'http').replace(/[^\/]*\.js[^$]*/,''));
+                if (e.stack){
+                    that.setConfig('cursorUrl',e.stack.replace(/[^$]*http/,'http').replace(/[^\/]*\.js[^$]*/,''));
+                }
             };
 
             // update the grid no more then 30 times a second
@@ -201,7 +203,9 @@ qxWeb.define('rrdGraphPng',{
             };
             qxWeb(window).on('resize',resize);
             img.__canvas = canvas;
-            img.__ctx = canvas[0].getContext("2d");
+            if (canvas[0].getContext){
+                img.__ctx = canvas[0].getContext("2d");
+            }
             resize();
         },
 
@@ -307,6 +311,9 @@ qxWeb.define('rrdGraphPng',{
         },
         __paintGridReal: function(img,initialRange,initialStart){
             var ctx = img.__ctx;
+            if (!ctx){
+                return;
+            }
             var width = img.getWidth();
             var height = img.getHeight();
             var skip = 100;
@@ -325,6 +332,9 @@ qxWeb.define('rrdGraphPng',{
         },
         __clearGrid: function(img){
             var ctx = img.__ctx;
+            if (!ctx){
+                return;
+            }
             var width = img.getWidth();
             var height = img.getHeight();
             ctx.clearRect(0,0,width,height);
