@@ -38,11 +38,13 @@ qxWeb.define('rrdGraphCtrl',{
                 "24 Hours":         { order: 11, len: 24*3600},
                 "7 Days":           { order: 12, len: 7*24*3600},
                 "4 Weeks":          { order: 13, len: 4*7*24*3600},
-                "12 Months":        { order: 13, len: 365*24*3600}
+                "12 Months":        { order: 14, len: 365*24*3600}
             },
             initialTimeRange: 'Today',
             rangeMatchPrecision: 0.05,
             showTimeBox: true,
+            showDateBox: true,
+            showTimeRanges: 'dropdown', // 'buttons', 'none'
             resetTimeOnDateChange: false,
             switchToCustomOnStartChange: true,
             momentTz: null
@@ -92,7 +94,9 @@ qxWeb.define('rrdGraphCtrl',{
             });
             var calendar = picker.getCalendar();
             calendar.setValue(new Date());
-
+            if (! this.getConfig('showDateBox')) {
+                start.hide();
+            }
             var timeBox = qxWeb.create('<input class="qx-datepicker" size="10" type="text" value="00:00:00" />');
             if (! this.getConfig('showTimeBox')){
                 timeBox.hide();
@@ -267,11 +271,15 @@ qxWeb.define('rrdGraphCtrl',{
             var rangeSelector = qxWeb.create('<select class="qx-widget qx-selectbox"/>');
             this.setProperty('rangeSelector',rangeSelector);
             rangeSelector.appendTo(this);
+            if (this.getConfig('showTimeRanges') == 'buttons'){
+                rangeSelector.hide();
+            }
             var keys = [];
             var tr =  this.getConfig('timeRanges');
             for (var prop in tr){
                 keys.push(prop);
             }
+            var that = this;
             keys.sort(function(a,b){ return tr[a].order - tr[b].order })
             .forEach(function(x){
                 rangeSelector.append(
@@ -281,6 +289,17 @@ qxWeb.define('rrdGraphCtrl',{
                         text: x
                     })
                 );
+
+                if (that.getConfig('showTimeRanges') == 'buttons'){
+                    rangeSelector.hide();
+                    var button = qxWeb.create('<button>'+x+'</button>');
+                    button.on('tap',function(){
+                        rangeSelector.setValue(x);
+                        onRangeSelectorChange();
+                    });
+                    button.appendTo(that);
+                }
+
             });
             var custom = qxWeb.create('<option value="0">Custom</option>');
             rangeSelector.append(custom);

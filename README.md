@@ -163,6 +163,15 @@ the range displayed as the graph is zoomed and scrolled. Default is 0.05.
 
 Display the time entry field. Default `true`
 
+#### `showDateBox`
+
+Display the date entry field. Default `true`
+
+#### `showTimeRanges`
+
+Show timeranges selector as a dropdown or as buttons. Use `dropdown` or
+`buttons`.
+
 #### `resetTimeOnDateChange`
 
 Reset the time to `0:00` when a new date is selected.
