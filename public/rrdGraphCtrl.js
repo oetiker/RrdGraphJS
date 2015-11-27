@@ -44,14 +44,13 @@ qxWeb.define('rrdGraphCtrl',{
             rangeMatchPrecision: 0.05,
             showTimeBox: true,
             showDateBox: true,
-            showTimeRanges: 'dropdown', // 'buttons', 'none'
+            showTimeRanges: 'dropdown', // 'buttons'
             resetTimeOnDateChange: false,
             switchToCustomOnStartChange: true,
             momentTz: null
         },
         rrdGraphCtrl: function(rrdGraphPng,cfg){
             var ctrl = new rrdGraphCtrl(this);
-
             ctrl.init(rrdGraphPng,cfg);
             return ctrl;
         }
