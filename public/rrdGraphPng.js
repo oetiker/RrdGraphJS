@@ -438,6 +438,10 @@ qxWeb.define('rrdGraphPng',{
                 }
             };
 
+            var onDoubleTap = function(e){
+                window.open(img.getProperty('src'),'_blank','width='+(img.getWidth()+10)+',height='+(img.getHeight()+10)+'titlebar=no,status=no,menubar=no,toolbar=no',false);
+            };
+            
             var onPointerOut = function(e){
                 if (!active) return;
                 e.preventDefault();
@@ -449,7 +453,8 @@ qxWeb.define('rrdGraphPng',{
 
             canvas.on('pinch',onPinch,this);
             canvas.on('pointerdown',onPointerDown,this);
-
+            canvas.on('dbltap',onDoubleTap,this);
+            
             img.once('qxRrdDispose',function(){
                 canvas.allOff();
                 qxDoc.off("pointerup",onPointerUp,this,true);
