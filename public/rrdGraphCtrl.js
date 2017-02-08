@@ -81,7 +81,7 @@ qxWeb.define('rrdGraphCtrl',{
             this._forEachElementWrapped(function(div,idx) {
                 div.setProperty('rrdGraphPng',rrdGraphPng);
                 div.emit('rebindRrdGraphPng');
-                rrdGraphPng.setStartRange(div.getProperty('start'),div.getProperty('range'));
+                rrdGraphPng.forEach(function(item){q(item).setStartRange(div.getProperty('start'),div.getProperty('range'))});
             });
         },
         __addDatePicker: function(){
@@ -313,8 +313,8 @@ qxWeb.define('rrdGraphCtrl',{
                             var range = info.range;
                             var start = info.end - range;
                             that.setProperty('range',range);
-                            rrdGraphPng.setStartRange(start,range);
-                            rrdGraphPng.emit('changeStartRange',{start:start,range:null});
+                            rrdGraphPng.forEach(function(item){ q(item).setStartRange(start,range) });
+                            rrdGraphPng.forEach(function(item){ q(item).emit('changeStartRange',{start:start,range:null})});
                         }
                         else {
                             console.log("unknown end type "+item.end);
@@ -322,7 +322,7 @@ qxWeb.define('rrdGraphCtrl',{
                         }
                     }
                     else {
-                        rrdGraphPng.setStartRange(rrdGraphPng.getStart(),item.len);
+                        rrdGraphPng.forEach(function(item){ var png = q(item); png.setStartRange(png.getStart(),item.len) });
                         that.setProperty('range',item.len);
                     }
                 }
@@ -378,10 +378,11 @@ qxWeb.define('rrdGraphCtrl',{
             rrdGraphPng.eq(0).on('changeStartRange',onChangeStartRange,this);
 
             var onRebindRrdGraphPng =  function(){
+                var that = this;
                 rrdGraphPng.eq(0).off('changeStartRange',onChangeStartRange,this);
                 rrdGraphPng = this.getProperty('rrdGraphPng');
                 rrdGraphPng.eq(0).on('changeStartRange',onChangeStartRange,this);
-                rrdGraphPng.setRange(this.getProperty('range'));
+                rrdGraphPng.forEach(function(item){ q(item).setRange(that.getProperty('range')) });
             };
             this.on('rebindRrdGraphPng',onRebindRrdGraphPng,this);
 

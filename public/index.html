@@ -17,10 +17,10 @@
         q.ready(function(){
 
             // 'activate' the charts
-            var graph = q('.graph').rrdGraphPng({
+            var graph = q('.graph').forEach(function(item){ q(item).rrdGraphPng({
                 canvasPadding: 120,
                 initialStart: null
-            });
+            }) });
 
             // crate a control panel and attach it to the charts
             q('#ctrl').rrdGraphCtrl(graph,{
@@ -32,10 +32,10 @@
             q('#rebinder').on('click',function(){
                 // q('#ctrl').dispose();
                 q('.graph').dispose();
-                var graph = q('.graph').rrdGraphPng({
+                var graph = q('.graph').forEach(function(item){q(item).rrdGraphPng({
                     canvasPadding: 120,
                     initialStart: null                    
-                }); 
+                }) }); 
                 q('#ctrl').rebind(graph);
             });
         });
