@@ -139,6 +139,7 @@ var c = q(selector).rrdGraphCtrl(g,configMap);
 ```
 
 The selector is expected to pick up a `<div>` tag. The control elements get added into the div tag.
+Note that g can also be an array of rrdGraphPng widgets.
 
 ```HTML
 <div class="ctrl"></div>
