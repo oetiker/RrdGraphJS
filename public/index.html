@@ -17,13 +17,18 @@
         q.ready(function(){
 
             // 'activate' the charts
-            var graph = q('.graph').forEach(function(item){ q(item).rrdGraphPng({
-                canvasPadding: 120,
-                initialStart: null
-            }) });
+            var graphs = [];
+            q('.graph').forEach(function(item){ 
+                graphs.push(
+                    q(item).rrdGraphPng({
+                        canvasPadding: 120,
+                        initialStart: null
+                    })
+                ); 
+            });
 
             // crate a control panel and attach it to the charts
-            q('#ctrl').rrdGraphCtrl(graph,{
+            q('#ctrl').rrdGraphCtrl(graphs,{
                 initialTimeRange: 'Last 60 Minutes',
                 resetTimeOnDateChange: true
             });
@@ -32,11 +37,15 @@
             q('#rebinder').on('click',function(){
                 // q('#ctrl').dispose();
                 q('.graph').dispose();
-                var graph = q('.graph').forEach(function(item){q(item).rrdGraphPng({
-                    canvasPadding: 120,
-                    initialStart: null                    
-                }) }); 
-                q('#ctrl').rebind(graph);
+                q('.graph').forEach(function(item){ 
+                    graphs.push(
+                        q(item).rrdGraphPng({
+                        canvasPadding: 120,
+                        initialStart: null
+                        })
+                    ); 
+                });
+                q('#ctrl').rebind(graphs);
             });
         });
     </script>
@@ -45,8 +54,8 @@
 <!--    <button id="rebinder">Rebind</button> -->
 
     <div id="ctrl"></div>
-    
-    
+
+
     <div><img
         style="width:695px;height:238px" class="graph"
         data-src-template="graphA?width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"

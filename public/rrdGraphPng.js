@@ -52,6 +52,8 @@ qxWeb.define('rrdGraphPng',{
         __start: null,
         __range: null,
         __syncJob: null,
+        __paintGrid: null,
+        __ctxCanvas: null,
         init: function(cfg){
             if (!this.base(arguments)) {
                 return false;
@@ -80,18 +82,16 @@ qxWeb.define('rrdGraphPng',{
             this.__range = parseInt(this.getConfig('initialRange'));
 
             qxWindow.on('resize',this.update,this);
-            this._forEachElementWrapped(function(img,idx) {
-                img.setStyle('display','inline-block');
-                img.setAttributes({
-                    unselectable: true,
-                    draggable: false
-                });
-                this.__addLoader(img);
-                this.__addCanvas(img);
-                this.__addTrack(img);
-                this.__addRoll(img);
-                img.emit('update');
-            },this);
+            this.setStyle('display','inline-block');
+            this.setAttributes({
+                unselectable: true,
+                draggable: false
+            });
+            this.__addLoader();
+            this.__addCanvas();
+            this.__addTrack();
+            this.__addRoll();
+            this.emit('upd[M#Nate');
             if (this.getConfig('autoUpdate')){
                 this.__addSyncCharts();
             }
@@ -121,9 +121,7 @@ qxWeb.define('rrdGraphPng',{
         },
 
         update: function(){
-            this._forEachElementWrapped(function(img,idx) {
-                img.emit('update');
-            },this);
+            this.emit('update');
         },
 
         __addSyncCharts: function(){
@@ -132,7 +130,7 @@ qxWeb.define('rrdGraphPng',{
             var that = this;
             var syncCharts = function(){
                 var currentEnd = that.__start + that.__range;
-                var now = Math.round((new Date).getTime()/1000);
+                var now = Math.round((new Date()).getTime()/1000);
                 if (now < currentEnd && now > that.__start){
                     if (!lastNow) {
                         lastNow = now;
@@ -141,11 +139,9 @@ qxWeb.define('rrdGraphPng',{
                     }
                     var increment = now - lastNow;
                     var go = false;
-                    that._forEachElementWrapped(function(img,idx) {
-                        if (that.__range / img.getWidth() < increment){
-                            go = true;
-                        }
-                    });
+                    if (that.__range / that.getWidth() < increment){
+                        go = true;
+                    }
                     if (go){
                         lastNow = now;
                         that.__start += increment;
@@ -163,13 +159,13 @@ qxWeb.define('rrdGraphPng',{
             }
         },
 
-        __buildUrl: function(img,zoom){
-            var template = img.getData('src-template');
+        __buildUrl: function(zoom){
+            var template = this.getData('src-template');
             var start = this.__start;
             if (start == null || isNaN(start)) return '';
             return qxWeb.template.render(template,{
-                width: img.getWidth(),
-                height: img.getHeight(),
+                width: this.getWidth(),
+                height: this.getHeight(),
                 start: start,
                 end: start + this.__range,
                 zoom: zoom ? zoom : 1,
@@ -177,9 +173,9 @@ qxWeb.define('rrdGraphPng',{
             });
         },
 
-        __addCanvas: function(img){
-            var offset = img.getOffset();
-            var pos = img.getPosition();
+        __addCanvas: function(){
+            var offset = this.getOffset();
+            var pos = this.getPosition();
             // console.log(img,offset,pos);
             var canvas = qxWeb.create('<canvas></canvas>');
             canvas.setStyles({
@@ -189,31 +185,31 @@ qxWeb.define('rrdGraphPng',{
                 draggable: "false",
                 unselectable: "true"
             })
-            .insertBefore(img);
+            .insertBefore(this);
 
             canvas.setStyle('cursor','url(' + this.getConfig('cursorUrl') + '/MoveCursor.cur), move');
 
             var resize = function(){
-                var width = img.getWidth();
-                var height = img.getHeight();
+                var width = this.getWidth();
+                var height = this.getHeight();
                 canvas.setStyles({width: width+'px', height: height+'px'});
                 canvas.setProperties({width: width.toString(), height: height.toString()});
                 //canvas.width = width;
                 //canvas.height = height;
             };
-            qxWeb(window).on('resize',resize);
-            img.__canvas = canvas;
+            qxWeb(window).on('resize',resize,this);
+            this.__canvas = canvas;
             if (canvas[0].getContext){
-                img.__ctx = canvas[0].getContext("2d");
+                this.__ctxCanvas = canvas[0].getContext("2d");
             }
-            resize();
+            resize.call(this);
         },
 
         __rangeCap: function(range){
             return Math.round(Math.min(Math.max(10,range),24*3600*366*20));
         },
 
-        __addLoader: function(img){
+        __addLoader: function(){
             var loading = false;
             var skipped = false;
             var lastSrc = null;
@@ -226,48 +222,48 @@ qxWeb.define('rrdGraphPng',{
                 //    img.emit('update');
                 //}
             };
-            img.on('error',onError,this);
+            this.on('error',onError,this);
             var onLoad = function(){
                 loading = false;
                 if (skipped){
                     skipped = false;
-                    img.emit('update');
+                    this.emit('update');
                 }
                 retry = 0;
             };
-            img.on('load',onLoad,this);
+            this.on('load',onLoad,this);
             var onUpdate = function(zoom){
-                var url = this.__buildUrl(img,zoom);
+                var url = this.__buildUrl(zoom);
                 if (!url) return;
                 if (! loading){
                     loading = true;
-                    img.setProperty('src',url);
+                    this.setProperty('src',url);
                 }
                 else {
                     skipped = true;
                 }
             };
 
-            var onUpdateThrottled = qxWeb.func.throttle(onUpdate,120);
-            img.on('update',onUpdateThrottled,this);
+            var onUpdateThrottled = qxWeb.func.throttle(onUpdate,120,this);
+            this.on('update',onUpdateThrottled,this);
 
-            img.once('qxRrdDispose',function(){
-                img.off('load',onLoad,this);
-                img.off('update',onUpdateThrottled,this);
-                img.off('error',onError,this);
+            this.once('qxRrdDispose',function(){
+                this.off('load',onLoad,this);
+                this.off('update',onUpdateThrottled,this);
+                this.off('error',onError,this);
             },this);
 
         },
 
-        __addRoll: function(img){
+        __addRoll: function(){
             var that = this;
             var syncUp = qxWeb.func.debounce(function(){
                 that.update();
                 that.emit('changeStartRange',{start:that.__start,range:that._range});
             },200);
-            var xPos = img.getWidth()/2;
+            var xPos = this.getWidth()/2;
             var onMove = function(e){
-                var newXPos = e.pageX - img.getOffset().left;
+                var newXPos = e.pageX - this.getOffset().left;
                 if (! isNaN(newXPos)){
                     xPos = newXPos;
                 }
@@ -283,39 +279,39 @@ qxWeb.define('rrdGraphPng',{
                 e.stopPropagation();
                 var delta = e.delta.y;
                 var initialRange = this.__range;
-                var xOrigin = xPos / img.getWidth();
+                var xOrigin = xPos / this.getWidth();
                 if (dotOff){
                     initialDotRange = this.__range;
                     initialDotStart = this.__start;
                     dotOff = false;
                 }
-                this.__paintGrid(img,initialDotRange,initialDotStart);
+                this.__paintGrid(this,initialDotRange,initialDotStart);
                 this.__range = this.__rangeCap(this.__range*(1+(delta/10000)));
                 this.__start = Math.round(this.__start + (initialRange - this.__range)*xOrigin);
                 var that = this;
                 killerId = window.setTimeout(function(){
                     window.clearTimeout(killerId);
-                    that.__clearGrid(img);
+                    that.__clearGrid();
                     dotOff=true
                 },1000);
-                img.emit('update',this.getConfig('moveZoom'));
+                this.emit('update',this.getConfig('moveZoom'));
                 syncUp();
             };
-            img.__canvas.on('pointermove',onMove,this);
-            img.__canvas.on('roll',onRoll,this);
+            this.__canvas.on('pointermove',onMove,this);
+            this.__canvas.on('roll',onRoll,this);
 
             //img.once('qxRrdDispose',function(){
             //    img.__canvas.off('pointermove',onMove,this);
             //    img.__canvas.off('roll',onRoll,this);
             //},this);
         },
-        __paintGridReal: function(img,initialRange,initialStart){
-            var ctx = img.__ctx;
+        __paintGridReal: function(initialRange,initialStart){
+            var ctx = this.__ctxCanvas;
             if (!ctx){
                 return;
             }
-            var width = img.getWidth();
-            var height = img.getHeight();
+            var width = this.getWidth();
+            var height = this.getHeight();
             var skip = 100;
             var xIncr = Math.round(initialRange / this.__range * skip);
             var xOff = Math.round((width / this.__range * (initialStart - this.__start)) % xIncr);
@@ -330,22 +326,22 @@ qxWeb.define('rrdGraphPng',{
                  ctx.fillRect(x+xWidth,0,xWidth,height);
             };
         },
-        __clearGrid: function(img){
-            var ctx = img.__ctx;
+        __clearGrid: function(){
+            var ctx = this.__ctxCanvas;
             if (!ctx){
                 return;
             }
-            var width = img.getWidth();
-            var height = img.getHeight();
+            var width = this.getWidth();
+            var height = this.getHeight();
             ctx.clearRect(0,0,width,height);
         },
-        __addTrack: function(img){
+        __addTrack: function(){
             var qxDocument = q(document);
             var initialStart = this.__start;
             var initialRange = this.__range;
             var xOrigin;
             var pointerOrigin;
-            var imgWidth = img.getWidth() - this.getConfig('canvasPadding');
+            var imgWidth = this.getWidth() - this.getConfig('canvasPadding');
             var active = false;
             var trackLock = false;
             var vertical;
@@ -376,10 +372,10 @@ qxWeb.define('rrdGraphPng',{
                 else {
                     this.__start = initialStart-Math.round(this.__range/imgWidth*delta.x);
                 }
-                this.__paintGrid(img,initialRange,initialStart);
+                this.__paintGrid(initialRange,initialStart);
                 e.preventDefault();
                 e.stopPropagation();
-                img.emit('update',this.getConfig('moveZoom'));
+                this.emit('update',this.getConfig('moveZoom'));
             };
 
             var onPinch = function(e){
@@ -391,11 +387,11 @@ qxWeb.define('rrdGraphPng',{
 
                 this.__range = this.__rangeCap(initialRange/scale);
                 this.__start = Math.round(initialStart + (initialRange - this.__range)/2);
-                this.__paintGrid(img,initialRange,initialStart);
-                img.emit('update',this.getConfig('moveZoom'));
+                this.__paintGrid(initialRange,initialStart);
+                this.emit('update',this.getConfig('moveZoom'));
             };
 
-            var canvas = img.__canvas;
+            var canvas = this.__canvas;
 
             var qxDoc = qxWeb(window);
             var onPointerUp = function(e){
@@ -403,7 +399,7 @@ qxWeb.define('rrdGraphPng',{
                 //e.stopPropagation();
                 //e.preventDefault();
                 active = false;
-                this.__clearGrid(img);
+                this.__clearGrid();
                 this.update();
                 if (initialRange != this.__range || initialStart != this.__start){
                     this.emit('changeStartRange',{start:this.__start,range:this.__range});
@@ -420,14 +416,14 @@ qxWeb.define('rrdGraphPng',{
                 active = true;
                 initialStart = this.__start;
                 initialRange = this.__range;
-                imgWidth = img.getWidth() - this.getConfig('canvasPadding');
+                imgWidth = this.getWidth() - this.getConfig('canvasPadding');
                 canvas.setStyle('cursor','url(' + this.getConfig('cursorUrl') + '/DragCursor.cur), move');
-                var newXPos = e.pageX - img.getOffset().left;
+                var newXPos = e.pageX - this.getOffset().left;
                 pointerOrigin = {
                     x: e.pageX, y: e.pageY
                 };
                 if (! isNaN(newXPos)){
-                    xOrigin = newXPos / img.getWidth();
+                    xOrigin = newXPos / this.getWidth();
                 }
                 qxDoc.on("pointermove",onPointerMove,this);
                 // on mobile devices we do not kill 'touch' because this could
@@ -439,7 +435,7 @@ qxWeb.define('rrdGraphPng',{
             };
 
             var onDoubleTap = function(e){
-                window.open(img.getProperty('src'),'_blank','width='+(img.getWidth()+10)+',height='+(img.getHeight()+10)+'titlebar=no,status=no,menubar=no,toolbar=no',false);
+                window.open(this.getProperty('src'),'_blank','width='+(this.getWidth()+10)+',height='+(this.getHeight()+10)+'titlebar=no,status=no,menubar=no,toolbar=no',false);
             };
             
             var onPointerOut = function(e){
@@ -455,7 +451,7 @@ qxWeb.define('rrdGraphPng',{
             canvas.on('pointerdown',onPointerDown,this);
             canvas.on('dbltap',onDoubleTap,this);
             
-            img.once('qxRrdDispose',function(){
+            this.once('qxRrdDispose',function(){
                 canvas.allOff();
                 qxDoc.off("pointerup",onPointerUp,this,true);
                 qxDoc.off('pointerout',onPointerOut,this,true);
@@ -467,11 +463,9 @@ qxWeb.define('rrdGraphPng',{
             if (this.__syncJob){
                 window.clearInterval(this.__syncJob);
             }
-            this._forEachElementWrapped(function(img) {
-                img.emit('qxRrdDispose');
-                img.removeAttribute('unselectable');
-                img.removeAttribute('draggable');
-            });
+            this.emit('qxRrdDispose');
+            this.removeAttribute('unselectable');
+            this.removeAttribute('draggable');
             return this.base(arguments);            
         }
     },
