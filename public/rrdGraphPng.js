@@ -91,7 +91,7 @@ qxWeb.define('rrdGraphPng',{
             this.__addCanvas();
             this.__addTrack();
             this.__addRoll();
-            this.emit('upd[M#Nate');
+            this.emit('update');
             if (this.getConfig('autoUpdate')){
                 this.__addSyncCharts();
             }
