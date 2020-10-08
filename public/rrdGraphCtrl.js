@@ -99,7 +99,6 @@ qxWeb.define('rrdGraphCtrl',{
             var onRebindrrdGraphPngs = function(){
                 rrdGraphPngs.forEach(function(png){ png.off('changeStartRange',onChangeStartRange,this) },this);
                 rrdGraphPngs = this.getProperty('rrdGraphPngs');
-                rrdGraphPngs.forEach(function(png){png.setStartRange(this.getProperty('start'),this.getProperty('range'))},this);
                 rrdGraphPngs.forEach(function(png){ png.on('changeStartRange',onChangeStartRange,this) },this);
             };
             this.on('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
@@ -203,6 +202,7 @@ qxWeb.define('rrdGraphCtrl',{
                 rrdGraphPngs.forEach(function(png){ png.off('changeStartRange',onChangeStartRange,this) },this);
                 rrdGraphPngs = this.getProperty('rrdGraphPngs');
                 rrdGraphPngs.forEach(function(png){ png.on('changeStartRange',onChangeStartRange,this) },this);
+                rrdGraphPngs.forEach(function(png){png.setStartRange(this.getProperty('start'),this.getProperty('range'))},this);
             };
             this.on('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
 
@@ -407,8 +407,11 @@ qxWeb.define('rrdGraphCtrl',{
             var onRebindrrdGraphPngs =  function(){
                 rrdGraphPngs.forEach(function(png){ png.off('changeStartRange',onChangeStartRange,this)},this);
                 rrdGraphPngs = this.getProperty('rrdGraphPngs');
-                rrdGraphPngs.forEach(function(png){ png.on('changeStartRange',onChangeStartRange,this)},this);
-                rrdGraphPngs.forEach(function(png){ png.setRange(this.getProperty('range')) },this);
+                onRangeSelectorChange.call(this);
+                rrdGraphPngs.forEach(function(png){
+                    png.on('changeStartRange',onChangeStartRange,this);
+                    png.emit('update');
+                },this);
             };
             this.on('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
 
