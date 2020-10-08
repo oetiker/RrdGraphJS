@@ -96,13 +96,21 @@ qxWeb.define('rrdGraphCtrl',{
             };
             rrdGraphPngs.forEach(function(png){ png.on('changeStartRange',onChangeStartRange,this)},this);           
 
+            var onRebindrrdGraphPngs = function(){
+                rrdGraphPngs.forEach(function(png){ png.off('changeStartRange',onChangeStartRange,this) },this);
+                rrdGraphPngs = this.getProperty('rrdGraphPngs');
+                rrdGraphPngs.forEach(function(png){png.setStartRange(this.getProperty('start'),this.getProperty('range'))},this);
+                rrdGraphPngs.forEach(function(png){ png.on('changeStartRange',onChangeStartRange,this) },this);
+            };
+            this.on('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
+            this.once('qxRrdDispose',function(){
+                this.off('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
+            },this);
             return true;
         },
         rebind: function(rrdGraphPngs){
             this.setProperty('rrdGraphPngs',rrdGraphPngs);
             this.emit('rebindrrdGraphPng');
-            var that = this;
-            rrdGraphPngs.forEach(function(png){png.setStartRange(this.getProperty('start'),this.getProperty('range'))},this);
         },
         __addDatePicker: function(){
             var rrdGraphPngs = this.getProperty('rrdGraphPngs');
@@ -199,7 +207,6 @@ qxWeb.define('rrdGraphCtrl',{
             this.on('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
 
             this.once('qxRrdDispose',function(){
-                var that = this;
                 this.off('rebindrrdGraphPng',onRebindrrdGraphPngs,this);
                 rrdGraphPngs.forEach(function(png){ png.off('changeStartRange',onChangeStartRange,this) },this);
                 timeBox.off('change',propagateDateTime,this);
