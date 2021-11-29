@@ -40,6 +40,7 @@ qxWeb.define('rrdGraphCtrl',{
                 "4 Weeks":          { order: 13, len: 4*7*24*3600},
                 "12 Months":        { order: 14, len: 365*24*3600}
             },
+            timeRangesCustomLabel: 'Custom',
             initialTimeRange: 'Today',
             rangeMatchPrecision: 0.05,
             showTimeBox: true,
@@ -330,7 +331,7 @@ qxWeb.define('rrdGraphCtrl',{
                 }
 
             });
-            var custom = qxWeb.create('<option value="0">Custom</option>');
+            var custom = qxWeb.create('<option value="0">' + this.getConfig('timeRangesCustomLabel') + '</option>');
             rangeSelector.append(custom);
             var blockStart = false;
             var onRangeSelectorChange = function(e){
