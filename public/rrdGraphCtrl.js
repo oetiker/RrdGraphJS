@@ -40,6 +40,7 @@ qxWeb.define('rrdGraphCtrl',{
                 "4 Weeks":          { order: 13, len: 4*7*24*3600},
                 "12 Months":        { order: 14, len: 365*24*3600}
             },
+            timeRangesCustomLabel: 'Custom',
             initialTimeRange: 'Today',
             rangeMatchPrecision: 0.05,
             showTimeBox: true,
@@ -47,7 +48,9 @@ qxWeb.define('rrdGraphCtrl',{
             showTimeRanges: 'dropdown', // 'buttons'
             resetTimeOnDateChange: false,
             switchToCustomOnStartChange: true,
-            momentTz: null
+            momentTz: null,
+            datePickerLocale: 'en-US',
+            datePickerOptions: {},
         },
         rrdGraphCtrl: function(rrdGraphPngs,cfg){
             var ctrl = new rrdGraphCtrl(this);
@@ -113,10 +116,12 @@ qxWeb.define('rrdGraphCtrl',{
         },
         __addDatePicker: function(){
             var rrdGraphPngs = this.getProperty('rrdGraphPngs');
-            var start = qxWeb.create('<input  type="text"/>');
+            var start = qxWeb.create('<input type="text"/>');
             start.appendTo(this);
+            var datePickerLocale = this.getConfig('datePickerLocale');
+            var datePickerOptions = this.getConfig('datePickerOptions');
             var picker = start.datepicker().setConfig('format', function(date) {
-                return date.toDateString();
+                return date.toLocaleDateString(datePickerLocale, datePickerOptions);
             });
             var calendar = picker.getCalendar();
             calendar.setValue(new Date());
@@ -326,7 +331,7 @@ qxWeb.define('rrdGraphCtrl',{
                 }
 
             });
-            var custom = qxWeb.create('<option value="0">Custom</option>');
+            var custom = qxWeb.create('<option value="0">' + this.getConfig('timeRangesCustomLabel') + '</option>');
             rangeSelector.append(custom);
             var blockStart = false;
             var onRangeSelectorChange = function(e){
