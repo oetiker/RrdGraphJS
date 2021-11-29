@@ -47,7 +47,9 @@ qxWeb.define('rrdGraphCtrl',{
             showTimeRanges: 'dropdown', // 'buttons'
             resetTimeOnDateChange: false,
             switchToCustomOnStartChange: true,
-            momentTz: null
+            momentTz: null,
+            datePickerLocale: 'en-US',
+            datePickerOptions: {},
         },
         rrdGraphCtrl: function(rrdGraphPngs,cfg){
             var ctrl = new rrdGraphCtrl(this);
@@ -113,10 +115,12 @@ qxWeb.define('rrdGraphCtrl',{
         },
         __addDatePicker: function(){
             var rrdGraphPngs = this.getProperty('rrdGraphPngs');
-            var start = qxWeb.create('<input  type="text"/>');
+            var start = qxWeb.create('<input type="text"/>');
             start.appendTo(this);
+            var datePickerLocale = this.getConfig('datePickerLocale');
+            var datePickerOptions = this.getConfig('datePickerOptions');
             var picker = start.datepicker().setConfig('format', function(date) {
-                return date.toDateString();
+                return date.toLocaleDateString(datePickerLocale, datePickerOptions);
             });
             var calendar = picker.getCalendar();
             calendar.setValue(new Date());
