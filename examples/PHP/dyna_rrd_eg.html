@@ -1,0 +1,94 @@
+<!--
+
+::: Overview :::
+
+Below are customizations to the baseline code:
+
+o For YYYY-MM-DD in the date picker, change the locale to 'fr-CA'
+
+o Additional argument passed to the PHP script is `uom' (unit of measure)
+  - Set to either (m)etric or (i)mperial.
+  - This example uses metric
+
+o The original RRD image is 900 (w) x 100 (h) however using that
+  dimension results in a /smeared/ image.  Adding additional
+  padding resolved the issue:
+
+        style="width:981px;height:168px" class="graph"
+                     ^^^          ^^^
+                      |            |
+                      |            +--- -- 100 padded to 160
+                      |
+                      +--- 900 padded to 981
+
+::: Source :::
+
+https://github.com/oetiker/RrdGraphJS
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="rrdGraphCtrl.css" rel="stylesheet">
+    <!-- the modules are implemented on top of the qxWeb library
+         from www.qooxdoo.org. It provides excellent
+         modularization and event normalization support out of
+         the box and thus made implementation of these
+         modules much simpler -->
+    <script type="text/javascript" src="q-5.0.2.min.js"></script>
+    <script type="text/javascript" src="moment.js"></script>
+    <script type="text/javascript" src="moment-timezone-with-data.js"></script>
+    <script type="text/javascript" src="rrdGraphPng.js"></script>
+    <script type="text/javascript" src="rrdGraphCtrl.js"></script>
+    <script type="text/javascript">
+        q.ready(function(){
+
+            // 'activate' the charts
+            var graphs = [];
+            q('.graph').forEach(function(item){
+                graphs.push(
+                    q(item).rrdGraphPng({
+                        canvasPadding: 100,
+                        initialStart: null,
+                        autoUpdate: true
+                    })
+                );
+            });
+
+            // create a control panel and attach it to the charts
+            q('#ctrl').rrdGraphCtrl(graphs,{
+                initialTimeRange: 'Last 24 Hours',
+                resetTimeOnDateChange: false,
+                datePickerLocale: 'fr-CA'
+            });
+
+            // you can also remove all the magic again
+            q('#rebinder').on('click',function(){
+                // q('#ctrl').dispose();
+                q('.graph').dispose();
+                q('.graph').forEach(function(item){ 
+                    graphs.push(
+                        q(item).rrdGraphPng({
+                        canvasPadding: 100,
+                        initialStart: null,
+                        autoUpdate: true
+                        })
+                    ); 
+                });
+                q('#ctrl').rebind(graphs);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="ctrl"></div>
+
+    <div><img
+        style="width:981px;height:168px" class="graph"
+        data-src-template="dyna_rrd_eg.php?uom=m&amp;width={{width}}&amp;height={{height}}&amp;start={{start}}&amp;end={{end}}&amp;zoom={{zoom}}&amp;rand={{random}}"
+    /></div>
+
+</body>
+</html>
