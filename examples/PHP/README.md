@@ -5,7 +5,7 @@ needs.  The code has ample documentation to guide a novice PHP
 developer.
 
 ## HTML
-The HTML code is based on the project's `../../public/index.html` file.
+The HTML code is based on the project's [public/index.html](/public/index.html) file.
 
 ## Live site
 This code is implemented at the link below using live, weather station
