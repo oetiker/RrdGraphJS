@@ -155,6 +155,7 @@ qxWeb.define('rrdGraphCtrl',{
                 this.setProperty('start',start);
                 this.emit('syncRrdGraphCtrlRange',start);
             };
+            propagateDateTime.call(this); // Populate "start" early on
 
             var blockDate = false;
             var onChangeValueCal = function(){
@@ -173,7 +174,7 @@ qxWeb.define('rrdGraphCtrl',{
             timeBox.on('change',propagateDateTime,this);
             var onKeyPressTbox = function(e){
                 if (e.key == "Enter") {
-                    propagateDateTime();
+                    propagateDateTime.call(this); // Pass on scope
                 }
             };
             timeBox.on('keypress',onKeyPressTbox,this);
@@ -195,7 +196,7 @@ qxWeb.define('rrdGraphCtrl',{
                 if (date != lastDate){
                     blockDate = true;
                     calendar.setValue(new Date(date.getTime()));
-                    var newTime = date.getHours()+':'+('0'+date.getMinutes()).slice(-2)+':'+('0'+date.getSeconds()).slice(-2);
+                    var newTime = ('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2)+':'+('0'+date.getSeconds()).slice(-2);
                     timeBox.setValue(newTime);
                     lastDate = date;
                 }
@@ -406,6 +407,30 @@ qxWeb.define('rrdGraphCtrl',{
 
             this.on('syncRrdGraphCtrlRange',onSyncRange,this);
 
+            // rewind button
+            var rewButton = qxWeb.create('<button>'+'«'+'</button>');
+            rewButton.on('tap',function(){
+                range = this.getProperty('range');
+                newStart = this.getProperty('start') - range;
+                this.setProperty('start', newStart);
+                rrdGraphPngs.forEach(function(png){
+                    png.emit('changeStartRange',{start:newStart,range:range});
+                },this);
+
+            },this);
+            rewButton.appendTo(this);
+            // forward button
+            var fwdButton = qxWeb.create('<button>'+'»'+'</button>');
+            fwdButton.on('tap',function(){
+                range = this.getProperty('range');
+                newStart = this.getProperty('start') + range;
+                this.setProperty('start', newStart);
+                rrdGraphPngs.forEach(function(png){
+                    png.emit('changeStartRange',{start:newStart,range:range});
+                },this);
+
+            },this);
+            fwdButton.appendTo(this);
 
             rrdGraphPngs.forEach(function(png){png.on('changeStartRange',onChangeStartRange,this)},this);
 
